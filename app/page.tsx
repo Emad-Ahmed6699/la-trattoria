@@ -55,7 +55,7 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center px-6 lg:px-20 py-20 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center px-6 lg:px-20 py-20 overflow-hidden animate-fade-in">
         <div className="absolute inset-0 -z-10">
           <img 
             className="w-full h-full object-cover opacity-90" 
@@ -64,7 +64,7 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent"></div>
         </div>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl animate-slide-up delay-200">
           <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Est. 1984 — Tuscany</span>
           <h1 className="text-6xl lg:text-8xl font-headline text-primary mb-6 leading-tight">Authenticity in <br/>Every Harvest.</h1>
           <p className="text-xl text-on-surface-variant mb-10 leading-relaxed font-body max-w-lg">
@@ -109,8 +109,8 @@ export default function HomePage() {
       )}
 
       {/* About Us Teaser */}
-      <section className="py-32 px-6 lg:px-20 bg-surface-container-low">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+      <section className="py-32 px-6 lg:px-20 bg-surface-container-low overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-20 items-center animate-slide-up">
           <div className="relative">
             <div className="bg-surface-container-highest w-full aspect-[4/5] rounded-md overflow-hidden">
               <img 
@@ -143,12 +143,12 @@ export default function HomePage() {
       </section>
 
       {/* Chef's Specials Bento Grid */}
-      <section className="py-32 px-6 lg:px-20 bg-background">
-        <div className="mb-20">
+      <section className="py-32 px-6 lg:px-20 bg-background overflow-hidden">
+        <div className="mb-20 animate-fade-in">
           <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-sm block mb-2">Seasonal Selection</span>
           <h2 className="text-4xl lg:text-5xl font-headline text-on-surface">Chef's Signature Specials</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 animate-slide-up delay-300">
           {/* Large Feature Card */}
           <div className="md:col-span-8 group relative overflow-hidden bg-surface-container rounded-lg">
             <div className="relative aspect-[16/9] overflow-hidden">

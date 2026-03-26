@@ -1,12 +1,15 @@
+
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://latrattoria.com';
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
       disallow: ['/admin/', '/api/'],
     },
-    sitemap: 'https://latrattoria.com/sitemap.xml', // Replace with actual production URL
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
