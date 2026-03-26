@@ -26,7 +26,7 @@ export default function AdminCalendar({ reservations }: AdminCalendarProps) {
 
   const getReservationsForDay = (day: number) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return reservations.filter(r => r.date === dateStr);
+    return reservations.filter(r => r.reservation_date === dateStr);
   };
 
   return (
@@ -65,7 +65,7 @@ export default function AdminCalendar({ reservations }: AdminCalendarProps) {
               <div className="mt-2 space-y-1">
                 {res.slice(0, 3).map(r => (
                   <div key={r.id} className="text-[9px] bg-primary-container/30 text-primary-container px-1.5 py-0.5 rounded-sm line-clamp-1 border border-primary/10">
-                    <span className="font-bold">{r.time}</span> {r.guest_name}
+                    <span className="font-bold">{r.reservation_time}</span> {r.customer_name}
                   </div>
                 ))}
                 {res.length > 3 && (

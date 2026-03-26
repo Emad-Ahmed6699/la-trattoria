@@ -17,8 +17,8 @@ export default function AdminReservationsPage() {
     const { data } = await supabase
       .from("reservations")
       .select("*")
-      .order("date", { ascending: true })
-      .order("time", { ascending: true });
+      .order("reservation_date", { ascending: true })
+      .order("reservation_time", { ascending: true });
     setReservations(data || []);
     setLoading(false);
   };
@@ -80,17 +80,17 @@ export default function AdminReservationsPage() {
                 reservations.map((res) => (
                   <tr key={res.id} className="hover:bg-surface-container-lowest transition-colors">
                     <td className="p-6">
-                      <p className="font-headline text-lg text-on-surface">{res.guest_name}</p>
+                      <p className="font-headline text-lg text-on-surface">{res.customer_name}</p>
                       <p className="text-on-surface-variant text-xs">{res.email}</p>
                       <p className="text-on-surface-variant text-xs">{res.phone}</p>
                     </td>
                     <td className="p-6">
-                      <p className="font-body text-sm font-bold text-primary">{res.date}</p>
-                      <p className="font-body text-xs text-on-surface-variant">{res.time}</p>
+                      <p className="font-body text-sm font-bold text-primary">{res.reservation_date}</p>
+                      <p className="font-body text-xs text-on-surface-variant">{res.reservation_time}</p>
                     </td>
                     <td className="p-6 text-center">
                       <span className="bg-surface-container px-3 py-1 rounded-sm font-headline text-lg border border-outline-variant/5">
-                        {res.party_size}
+                        {res.guests}
                       </span>
                     </td>
                     <td className="p-6 max-w-xs">
