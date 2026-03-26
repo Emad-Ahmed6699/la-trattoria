@@ -32,36 +32,44 @@ export default function ReservationsPage() {
       return;
     }
 
-    const { error: submitError } = await supabase
-      .from("reservations")
-      .insert([
-        {
-          party_size: parseInt(formData.partySize) || 0,
-          date: formData.date,
-          time: formData.time,
-          guest_name: formData.guestName,
+    try {
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.guestName,
           email: formData.email,
           phone: formData.phone,
-          occasion: formData.occasion || null,
-          special_requests: formData.specialRequests || null,
-        },
-      ]);
-
-    if (submitError) {
-      console.error("Submission error:", submitError);
-      setError("Something went wrong. Please try again.");
-    } else {
-      setSuccess("Your reservation has been received! We'll confirm shortly.");
-      setFormData({
-        partySize: "2 Guests",
-        date: "",
-        time: "19:00",
-        guestName: "",
-        email: "",
-        phone: "",
-        occasion: "",
-        specialRequests: "",
+          date: formData.date,
+          time: formData.time,
+          guests: formData.partySize,
+          occasion: formData.occasion,
+          requests: formData.specialRequests,
+        }),
       });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSuccess("Your reservation has been received! Check your email for confirmation.");
+        setFormData({
+          partySize: "2 Guests",
+          date: "",
+          time: "19:00",
+          guestName: "",
+          email: "",
+          phone: "",
+          occasion: "",
+          specialRequests: "",
+        });
+      } else {
+        setError(result.error || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setError("Something went wrong. Please try again.");
     }
     setLoading(false);
   };
@@ -74,20 +82,26 @@ export default function ReservationsPage() {
     setNlLoading(true);
     setNlMessage(null);
 
-    const { error } = await supabase
-      .from("newsletter_subscriptions")
-      .insert([{ email: nlEmail }]);
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: nlEmail }),
+      });
 
-    if (error) {
-      console.error("Newsletter error:", error);
-      if (error.code === "23505") { // Unique violation
-        setNlMessage({ text: "This email is already subscribed!", type: "success" });
+      const result = await response.json();
+
+      if (response.ok) {
+        setNlMessage({ text: result.message || "Thank you for subscribing!", type: "success" });
+        setNlEmail("");
       } else {
-        setNlMessage({ text: "Something went wrong.", type: "error" });
+        setNlMessage({ text: result.error || "Something went wrong.", type: "error" });
       }
-    } else {
-      setNlMessage({ text: "Thank you for subscribing!", type: "success" });
-      setNlEmail("");
+    } catch (err) {
+      console.error("Newsletter submission error:", err);
+      setNlMessage({ text: "Something went wrong.", type: "error" });
     }
     setNlLoading(false);
   };
