@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #fcf9f3;
+    --on-background: #1c1c18;
+    --surface: #fcf9f3;
+    --on-surface: #1c1c18;
+    --surface-variant: #e5e2dc;
+    --on-surface-variant: #554246;
+    --primary: #5c0429;
+    --on-primary: #ffffff;
+    --primary-container: #7a1f3f;
+    --on-primary-container: #ff8bab;
+    --secondary: #974727;
+    --on-secondary: #ffffff;
+    --tertiary: #745b00;
+    --on-tertiary: #ffffff;
+    --error: #ba1a1a;
+    --on-error: #ffffff;
+    --outline: #877276;
+    --outline-variant: #dac0c5;
+    --surface-container-low: #f6f3ed;
+    --surface-container: #f0eee8;
+    --surface-container-high: #ebe8e2;
+    --surface-container-highest: #e5e2dc;
+    --surface-container-lowest: #ffffff;
+  }
+
+  .dark {
+    --background: #1c1c18;
+    --on-background: #fcf9f3;
+    --surface: #1c1c18;
+    --on-surface: #fcf9f3;
+    --surface-variant: #44474e;
+    --on-surface-variant: #c4c6d0;
+    --primary: #ffb1c3;
+    --on-primary: #5c0429;
+    --primary-container: #7d2a45;
+    --on-primary-container: #ffd9e0;
+    --secondary: #ffb59a;
+    --on-secondary: #5a1d00;
+    --tertiary: #e7c35a;
+    --on-tertiary: #3d2f00;
+    --error: #ffb4ab;
+    --on-error: #690005;
+    --outline: #8d9199;
+    --outline-variant: #44474e;
+    --surface-container-low: #252420;
+    --surface-container: #31312d;
+    --surface-container-high: #3c3c38;
+    --surface-container-highest: #484742;
+    --surface-container-lowest: #0d0d0b;
+  }
+
+  body {
+    @apply bg-background text-on-surface transition-colors duration-500;
+  }
+}
+@layer utilities {
+  /* ... existing utilities ... */
+}
+
+@media print {
+  nav, footer, section:has(form), .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: #1c1c18 !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+  }
+
+  .bg-background, .bg-surface, .bg-surface-container, .bg-surface-container-low {
+    background: white !important;
+  }
+
+  .text-primary {
+    color: #5c0429 !important;
+  }
+
+  .border-primary {
+    border-color: #5c0429 !important;
+  }
+
+  /* Force page breaks after categories for better organization */
+  section.scroll-mt-40 {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 40px !important;
+  }
+
+  header.relative {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About Us",
+    "reservations": "Reservations",
+    "events": "Events",
+    "gallery": "Gallery",
+    "blog": "Blog",
+    "contact": "Contact",
+    "gift_cards": "Gift Cards",
+    "book_table": "Book a Table"
+  },
+  "hero": {
+    "title": "Authentic Italian Heritage",
+    "subtitle": "A Modern Culinary Journey",
+    "cta": "Explore Menu"
+  },
+  "status": {
+    "open": "Open Now",
+    "closed": "Closed Now",
+    "rome": "Rome"
+  }
+}

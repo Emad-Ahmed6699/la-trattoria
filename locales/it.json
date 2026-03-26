@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "Chi Siamo",
+    "reservations": "Prenotazioni",
+    "events": "Eventi",
+    "gallery": "Galleria",
+    "blog": "Blog",
+    "contact": "Contatti",
+    "gift_cards": "Carte Regalo",
+    "book_table": "Prenota un Tavolo"
+  },
+  "hero": {
+    "title": "Eredità Italiana Autentica",
+    "subtitle": "Un Viaggio Culinario Moderno",
+    "cta": "Esplora il Menu"
+  },
+  "status": {
+    "open": "Aperto Ora",
+    "closed": "Chiuso Ora",
+    "rome": "Roma"
+  }
+}
