@@ -67,13 +67,16 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-surface border-b border-outline-variant/20 py-6 px-6 lg:hidden flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="absolute top-full left-0 right-0 bg-surface border-b border-outline-variant/20 p-6 lg:hidden flex flex-col animate-in fade-in slide-in-from-top-4 duration-300 max-h-[calc(100vh-70px)] overflow-y-auto shadow-2xl">
+          <div className="mb-6 flex justify-center">
+             <LiveStatus />
+          </div>
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="text-label text-on-surface hover:text-primary transition-colors text-lg py-2 border-b border-outline-variant/5"
+              className="text-label text-on-surface hover:text-primary transition-colors text-lg py-3 border-b border-outline-variant/5"
             >
               {link.name}
             </Link>
@@ -81,7 +84,7 @@ export default function Navbar() {
           <Link
             href="/reservations"
             onClick={() => setIsOpen(false)}
-            className="mt-4 bg-primary text-on-primary px-6 py-4 rounded-sm font-medium text-center"
+            className="mt-6 bg-primary text-on-primary px-6 py-4 rounded-sm font-medium text-center shadow-lg"
           >
             {t("nav.book_table")}
           </Link>
