@@ -60,14 +60,14 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 1 }}
-            className="text-7xl lg:text-9xl font-headline text-primary mb-8 leading-[0.85] tracking-tight"
+            className="text-5xl md:text-7xl lg:text-9xl font-headline text-primary mb-8 leading-tight md:leading-[0.85] tracking-tight break-words"
           >
             Authenticity <br />
             <motion.span 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.2, duration: 1 }}
-              className="italic text-tertiary ml-8 lg:ml-20"
+              className="italic text-tertiary ml-2 md:ml-8 lg:ml-20 block md:inline"
             >
               in Every Harvest.
             </motion.span>
@@ -77,7 +77,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 1 }}
-            className="text-xl text-on-surface-variant mb-12 leading-relaxed font-body max-w-xl border-l border-primary/20 pl-8"
+            className="text-base md:text-xl text-on-surface-variant mb-8 md:mb-12 leading-relaxed font-body max-w-xl border-l-2 border-primary/20 pl-4 md:pl-8"
           >
             Experience a journey through the rolling hills of Italy. Where traditional techniques meet modern viticulture in the heart of the city.
           </motion.p>
