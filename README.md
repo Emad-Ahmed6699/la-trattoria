@@ -1,80 +1,77 @@
-# La Trattoria - Modern Italian Cuisine Website
+# 🇮🇹 La Trattoria - Modern Italian Cuisine
 
-A premium, upscale restaurant website built with **Next.js 14**, **Tailwind CSS**, **Stripe**, and **Supabase**.
+[![Deployment](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)](https://la-trattoria-xwwa.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 
-## 🌟 Overview
-La Trattoria is a state-of-the-art web application for a modern Italian restaurant. It features a sleek, editorial design system, seamless reservation management, and an integrated gift card system powered by Stripe.
+A premium, high-performance web application for **La Trattoria**, an upscale Italian restaurant. This project combines state-of-the-art web technologies with a sophisticated editorial design system to provide a seamless user experience.
 
-## 🎨 Design System: "The Modern Viticulturist"
-This project implements a custom editorial design system characterized by:
-- **Palette:** Warm, light-mode foundation (Off-white) with Deep Burgundy (#7A1F3F) and Terracotta (#C96E4B) accents.
-- **Typography:** Modern Google Fonts (`Montserrat` for headings, `Open Sans` for body text).
-- **Feel:** Elegant, clean UI with soft spacing and rounded corners.
-
-## 🚀 Features
-- **🏠 Homepage:** Stunning hero section, philosophy overview, and critical CTAs.
-- **🍴 Menu Page:** Built-in client-side filtering for robust menu categorization (Appetizers, Mains, Wine List, etc.).
-- **📅 Reservations:** Comprehensive booking form with real-time validation via `react-hook-form`.
-- **🎁 Gift Cards:** Fully integrated gift card purchase flow with Stripe Checkout and balance verification.
-- **💳 Payments:** Secure payment processing using Stripe Webhooks for gift card issuance.
-- **🗄️ Database:** Supabase integration for storing reservations and inquiries.
-- **📧 Email Notifications:** Automated email system using **Resend** for confirmations and newsletters.
-- **📱 Responsive Navigation:** Sticky desktop navbar and a functional mobile drawer menu.
-- **🌍 Internationalization:** Multi-language support (English and Arabic) powered by custom locale management.
-
-## 🛠️ Tech Stack
-- **Framework:** [Next.js 14 (App Router)](https://nextjs.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Auth & Database:** [Supabase](https://supabase.com/)
-- **Payments:** [Stripe](https://stripe.com/)
-- **Email:** [Resend](https://resend.com/)
-- **Forms:** [React Hook Form](https://react-hook-form.com/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-
-## 🏁 Getting Started
-
-### 1. Prerequisites
-- Node.js 18.17 or later
-- A Stripe account (for payments)
-- A Supabase project (for database)
-- A Resend API key (for emails)
-
-### 2. Installation
-```bash
-git clone https://github.com/your-username/la-trattoria.git
-cd la-trattoria
-npm install
-```
-
-### 3. Environment Setup
-Create a `.env.local` file in the root directory and add your credentials:
-```env
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-
-RESEND_API_KEY=re_...
-```
-
-### 4. Run Locally
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) to see the application.
-
-## 📁 Project Structure
-- `/app`: Next.js App Router pages and API routes.
-- `/components`: Reusable UI components.
-- `/lib`: Utility functions and shared configurations.
-- `/locales`: Translation files for i18n.
-- `/public`: Static assets (images, icons).
-- `/supabase`: Database migrations and configuration.
-
-## 📜 License
-This project is licensed under the MIT License.
+🔗 **Live Demo:** [la-trattoria-xwwa.vercel.app](https://la-trattoria-xwwa.vercel.app/)
 
 ---
-*Built with ❤️ for La Trattoria*
+
+## ✨ Key Features
+
+- **🎨 Premium Design System**: A custom "Modern Viticulturist" aesthetic featuring glassmorphism, smooth gradients, and a curated color palette (Burgundy & Terracotta).
+- **🎭 Smooth Animations**: Powered by `framer-motion` for elegant entry transitions and interactive UI elements.
+- **📅 Smart Reservations**: Real-time booking system with form persistence (`localStorage`) to ensure no data is lost during refreshes.
+- **🎁 Gift Card Boutique**: Secure gift card purchasing flow integrated with **Stripe Checkout** and balance verification.
+- **📧 Automated Notifications**: Instant email confirmations for bookings, inquiries, and news subscriptions using **Resend**.
+- **📱 Responsive Excellence**: Fully optimized for mobile, tablet, and desktop with a specialized mobile drawer and scrollable navigation.
+- **🖼️ Interactive Gallery**: Filterable photo gallery to showcase the restaurant's atmosphere and dishes.
+- **📊 Admin Dashboard**: A responsive management interface for tracking house operations and reservations.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS (Custom Theme)
+- **Animations**: Framer Motion
+- **Icons**: Lucide React & Material Symbols
+
+### Backend & Services
+- **Database**: Supabase (PostgreSQL)
+- **Payments**: Stripe (Checkout & Webhooks)
+- **Email**: Resend API
+- **Caching**: LocalStorage Persistence Hooks
+
+---
+
+## 📂 Project Structure
+
+- `/app`: Next.js pages, layouts, and API route handlers.
+- `/components`: Reusable UI building blocks (Navbar, Hero, Forms).
+- `/lib`: Core logic for database, email templates, and Stripe integration.
+- `/hooks`: Custom React hooks for state and persistence.
+- `/public`: Static assets including high-resolution imagery and icons.
+
+---
+
+## 🚀 Getting Started
+
+1. **Clone & Install**:
+   ```bash
+   git clone https://github.com/your-username/la-trattoria.git
+   npm install
+   ```
+
+2. **Environment Setup**:
+   Copy `.env.example` to `.env.local` and fill in your Supabase and Stripe credentials.
+
+3. **Development**:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📜 Documentation
+For a deeper dive into the project's technical architecture, refer to:
+- [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) - A comprehensive guide in Arabic.
+- [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) - Technical details for the email system.
+
+---
+*Created with passion for authentic Italian hospitality.*
