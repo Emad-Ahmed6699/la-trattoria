@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import Newsletter from "@/components/Newsletter";
 import { motion } from "framer-motion";
@@ -10,7 +11,7 @@ export default function ContactPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useLocalStorage("contactFormData", {
     fullName: "",
     email: "",
     inquiryType: "General Inquiry",

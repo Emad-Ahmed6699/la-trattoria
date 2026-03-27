@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import { useSearchParams } from 'next/navigation';
 import { supabase } from "@/lib/supabase";
@@ -13,7 +14,7 @@ function ReservationForm() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useLocalStorage("reservationFormData", {
     partySize: "2 Guests",
     date: "",
     time: "19:00",

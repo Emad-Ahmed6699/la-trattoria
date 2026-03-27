@@ -90,6 +90,13 @@
 }
 
 @media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   nav, footer, section:has(form), .no-print {
     display: none !important;
   }
@@ -101,6 +108,7 @@
 
   main {
     padding-top: 0 !important;
+    overflow: visible !important;
   }
 
   .bg-background, .bg-surface, .bg-surface-container, .bg-surface-container-low {

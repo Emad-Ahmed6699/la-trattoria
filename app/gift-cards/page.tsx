@@ -3,15 +3,16 @@
 import Image from "next/image";
 import { CreditCard, Send, ShieldCheck, Gift, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function GiftCardsPage() {
   const router = useRouter();
-  const [cardType, setCardType] = useState<'physical' | 'egift'>('physical');
-  const [amount, setAmount] = useState('€100');
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [cardType, setCardType] = useLocalStorage<'physical' | 'egift'>('gc_cardType', 'physical');
+  const [amount, setAmount] = useLocalStorage('gc_amount', '€100');
+  const [recipientEmail, setRecipientEmail] = useLocalStorage('gc_email', '');
+  const [message, setMessage] = useLocalStorage('gc_message', '');
   const [isLoading, setIsLoading] = useState(false);
   const [balanceCode, setBalanceCode] = useState("");
   const [balanceResult, setBalanceResult] = useState<{ balance: string; valid: boolean } | null>(null);
