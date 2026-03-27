@@ -28,8 +28,18 @@ export default function InquiriesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this inquiry?")) return;
     const table = activeTab === "contact" ? "contact_inquiries" : "event_inquiries";
-    const { error } = await supabase.from(table).delete().eq("id", id);
-    if (!error) fetchInquiries();
+    try {
+      const { error } = await supabase.from(table).delete().eq("id", id);
+      if (error) {
+        console.error("Supabase deletion error:", error);
+        alert(`Failed to delete: ${error.message}`);
+      } else {
+        await fetchInquiries();
+      }
+    } catch (err: any) {
+      console.error("Unexpected deletion error:", err);
+      alert("An unexpected error occurred while deleting.");
+    }
   };
 
   return (

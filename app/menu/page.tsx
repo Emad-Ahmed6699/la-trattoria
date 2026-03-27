@@ -3,6 +3,8 @@
 import { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import Newsletter from "@/components/Newsletter";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MenuPage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -52,11 +54,16 @@ export default function MenuPage() {
   const wineTypes = ["Red", "White", "Sparkling", "Rosé", "Dessert"];
 
   return (
-    <main className="bg-background">
+    <main className="bg-background overflow-x-hidden">
       {/* Hero / Title Section */}
       <header className="relative py-24 px-6 overflow-hidden pt-32 text-center lg:text-left">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <div className="relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10"
+          >
             <span className="text-tertiary font-label tracking-[0.2em] uppercase text-xs mb-4 block">Authentic Italian Cuisine</span>
             <h1 className="font-headline text-6xl lg:text-8xl leading-none text-on-surface mb-8">Our Seasonal <br /><span className="italic text-primary">Menu</span></h1>
             <p className="text-on-surface-variant max-w-md text-lg leading-relaxed mb-10 mx-auto lg:mx-0">
@@ -82,15 +89,20 @@ export default function MenuPage() {
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary text-[18px]">search</span>
                 </div>
             </div>
-          </div>
-          <div className="relative h-[500px] w-full bg-surface-container rounded-md overflow-hidden shadow-2xl">
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative h-[500px] w-full bg-surface-container rounded-md overflow-hidden shadow-2xl"
+          >
             <img 
               alt="Signature Pasta" 
               className="w-full h-full object-cover" 
               src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=2000&auto=format&fit=crop"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
-          </div>
+          </motion.div>
         </div>
       </header>
 
@@ -117,14 +129,44 @@ export default function MenuPage() {
            </div>
         ) : (
           filteredCategories.map((cat: any) => (
-            <section key={cat.id} className="scroll-mt-40" id={cat.id}>
+            <motion.section 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+              key={cat.id} 
+              className="scroll-mt-40" 
+              id={cat.id}
+            >
               <div className="flex items-end justify-between mb-16 border-b border-outline-variant/10 pb-8">
                 <h2 className="font-headline text-5xl text-on-surface">{cat.name}</h2>
                 <p className="font-label text-tertiary text-sm tracking-widest uppercase hidden md:block">Authentic Selections</p>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12">
-                {filteredItems.filter((item: any) => item.category_id === cat.id && item.is_available).map((item: any) => (
-                  <div key={item.id} className="group">
+              <motion.div 
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 }
+                  }
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12"
+              >
+                <AnimatePresence>
+                  {filteredItems.filter((item: any) => item.category_id === cat.id && item.is_available).map((item: any) => (
+                    <motion.div 
+                      layout
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        show: { opacity: 1, y: 0 }
+                      }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      key={item.id} 
+                      className="group"
+                    >
                     <div className="h-64 bg-surface-container rounded-md overflow-hidden mb-6 shadow-sm group-hover:shadow-md transition-shadow">
                       {item.image_url ? (
                         <img 
@@ -151,20 +193,33 @@ export default function MenuPage() {
                          <span key={info} className="bg-tertiary/10 text-on-tertiary-fixed-variant text-[9px] px-2 py-1 rounded-full uppercase font-bold tracking-tighter border border-tertiary/20">{info}</span>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
-            </section>
+              </AnimatePresence>
+              </motion.div>
+            </motion.section>
           ))
         )}
 
         {/* Wine Cellar Section */}
         {filteredWines.length > 0 && (
-          <section id="wine-cellar" className="scroll-mt-40 pt-20 border-t border-outline-variant/20">
+          <motion.section 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            id="wine-cellar" 
+            className="scroll-mt-40 pt-20 border-t border-outline-variant/20"
+          >
             <div className="text-center mb-24">
               <span className="text-tertiary font-label tracking-[0.3em] uppercase text-xs mb-4 block">The Sommelier's Selection</span>
               <h2 className="font-headline text-6xl text-on-surface mb-6">The Wine <span className="italic text-primary text-5xl">Cellar</span></h2>
-              <div className="h-px w-24 bg-primary mx-auto mb-8"></div>
+              <motion.div 
+                initial={{ width: 0 }}
+                whileInView={{ width: "6rem" }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="h-px bg-primary mx-auto mb-8"
+              ></motion.div>
               <p className="max-w-xl mx-auto text-on-surface-variant font-body">Our cellar houses a meticulous collection of regional gems and iconic Italian vintages, hand-picked to complement our seasonal harvests.</p>
             </div>
 
@@ -202,28 +257,11 @@ export default function MenuPage() {
                 );
               })}
             </div>
-          </section>
+          </motion.section>
         )}
       </div>
 
-      {/* Newsletter Section */}
-      <section className="bg-primary-container text-on-primary py-24 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-headline text-4xl mb-4">Join Our Newsletter</h2>
-          <p className="text-on-primary-container/80 mb-10 leading-relaxed font-body">Stay updated with our latest events and seasonal menus. Receive exclusive invitations to our tasting nights.</p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input 
-              className="flex-1 bg-white/10 border-none border-b border-on-primary/30 text-on-primary placeholder:text-on-primary/50 focus:ring-0 focus:border-on-primary py-4 px-4 font-body" 
-              placeholder="Your email address" 
-              type="email"
-              required
-            />
-            <button className="bg-on-primary text-primary px-10 py-4 font-bold rounded-sm uppercase tracking-widest text-xs hover:bg-primary-fixed transition-colors font-label">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+      <Newsletter />
     </main>
   );
 }

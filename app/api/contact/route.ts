@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Save inquiry to database
-    const { data: inquiryData, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from('contact_inquiries')
       .insert([
         {
@@ -23,9 +23,7 @@ export async function POST(request: Request) {
           subject: data.subject,
           message: data.message,
         },
-      ])
-      .select()
-      .single();
+      ]);
 
     if (dbError) {
       console.error('Database error:', dbError);
@@ -56,7 +54,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       success: true, 
       message: 'Thank you for your message. We will get back to you soon.',
-      data: inquiryData
     });
   } catch (error) {
     console.error('Contact error:', error);

@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from 'next/navigation';
 import { supabase } from "@/lib/supabase";
+import Newsletter from "@/components/Newsletter";
+import { motion } from "framer-motion";
 
-export default function ReservationsPage() {
+function ReservationForm() {
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +22,15 @@ export default function ReservationsPage() {
     phone: "",
     occasion: "",
     specialRequests: "",
+    appliedPromo: "",
   });
+
+  useEffect(() => {
+    const promo = searchParams.get('promo');
+    if (promo) {
+      setFormData(prev => ({ ...prev, appliedPromo: promo }));
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +59,7 @@ export default function ReservationsPage() {
           guests: formData.partySize,
           occasion: formData.occasion,
           requests: formData.specialRequests,
+          appliedPromo: formData.appliedPromo,
         }),
       });
 
@@ -63,6 +76,7 @@ export default function ReservationsPage() {
           phone: "",
           occasion: "",
           specialRequests: "",
+          appliedPromo: "",
         });
       } else {
         setError(result.error || "Something went wrong. Please try again.");
@@ -73,57 +87,187 @@ export default function ReservationsPage() {
     }
     setLoading(false);
   };
-  const [nlEmail, setNlEmail] = useState("");
-  const [nlLoading, setNlLoading] = useState(false);
-  const [nlMessage, setNlMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setNlLoading(true);
-    setNlMessage(null);
+  return (
+    <div className="lg:col-span-8 bg-surface-container-lowest p-8 md:p-16">
+      <form onSubmit={handleSubmit} className="space-y-12">
+        {formData.appliedPromo && (
+          <div className="bg-tertiary/10 border-l-4 border-tertiary p-4 rounded-sm flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-tertiary font-bold mb-1">Applied Offer</p>
+              <p className="text-sm font-headline text-on-surface">{formData.appliedPromo}</p>
+            </div>
+            <span className="material-symbols-outlined text-tertiary">card_giftcard</span>
+          </div>
+        )}
 
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: nlEmail }),
-      });
+        {/* Step 1: Selection */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Party Size</label>
+            <select 
+              title="Party Size" 
+              className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
+              value={formData.partySize}
+              onChange={(e) => setFormData({ ...formData, partySize: e.target.value })}
+            >
+              <option>2 Guests</option>
+              <option>3 Guests</option>
+              <option>4 Guests</option>
+              <option>5 Guests</option>
+              <option>6+ Guests</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-2 font-body">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Date</label>
+            <input 
+              title="Date" 
+              className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer" 
+              type="date" 
+              required
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Time</label>
+              <select 
+                title="Time" 
+                className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
+                value={formData.time}
+                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+              >
+              <option>19:00</option>
+              <option>19:30</option>
+              <option>20:00</option>
+              <option>20:30</option>
+              <option>21:00</option>
+            </select>
+          </div>
+        </div>
 
-      const result = await response.json();
+        {/* Step 2: Contact Info */}
+        <div className="space-y-8">
+          <h3 className="text-xl font-headline border-b border-surface-container-highest pb-4 text-on-surface">Personal Details</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Full Name</label>
+              <input 
+                className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
+                placeholder="Giacomo Rossi" 
+                type="text" 
+                required
+                value={formData.guestName}
+                onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Email Address</label>
+              <input 
+                className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
+                placeholder="giacomo@example.it" 
+                type="email" 
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Phone Number</label>
+              <input 
+                className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
+                placeholder="+39 055 123 4567" 
+                type="tel" 
+                required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Occasion (Optional)</label>
+              <select 
+                title="Occasion" 
+                className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
+                value={formData.occasion}
+                onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
+              >
+                <option value="">None</option>
+                <option>Birthday</option>
+                <option>Anniversary</option>
+                <option>Business Dinner</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-      if (response.ok) {
-        setNlMessage({ text: result.message || "Thank you for subscribing!", type: "success" });
-        setNlEmail("");
-      } else {
-        setNlMessage({ text: result.error || "Something went wrong.", type: "error" });
-      }
-    } catch (err) {
-      console.error("Newsletter submission error:", err);
-      setNlMessage({ text: "Something went wrong.", type: "error" });
-    }
-    setNlLoading(false);
-  };
+        {/* Step 3: Requests */}
+        <div className="space-y-4">
+          <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Special Requests or Dietary Requirements</label>
+          <textarea 
+            className="w-full bg-surface-container-low border-0 p-4 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 rounded-sm font-body" 
+            placeholder="Please let us know about any allergies or seating preferences..." 
+            rows={3}
+            value={formData.specialRequests}
+            onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+          ></textarea>
+        </div>
 
+        {/* Terms */}
+        <div className="flex items-start gap-4">
+          <input className="mt-1 rounded-sm border-outline-variant text-primary focus:ring-primary h-4 w-4" id="terms" type="checkbox" required />
+          <label className="text-xs text-outline leading-relaxed font-body" htmlFor="terms">
+            I confirm the reservation details and agree to the <a className="underline text-primary" href="#">cancellation policy</a>. Tables are held for 15 minutes past the reservation time.
+          </label>
+        </div>
+
+        {success && <div className="p-4 bg-tertiary/10 text-tertiary text-sm rounded-sm font-body">{success}</div>}
+        {error && <div className="p-4 bg-error/10 text-error text-sm rounded-sm font-body">{error}</div>}
+
+        <button 
+          disabled={loading}
+          className="w-full bg-primary text-on-primary py-5 text-sm font-bold tracking-[0.3em] uppercase hover:bg-primary-container transition-all flex items-center justify-center gap-3 font-label disabled:opacity-50" 
+          type="submit"
+        >
+          {loading ? "Processing..." : "Confirm Reservation"}
+          <span className="material-symbols-outlined">arrow_right_alt</span>
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default function ReservationsPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden pt-20">
-        <img 
+        <motion.img 
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.5 }}
           alt="Restaurant Interior" 
           className="absolute inset-0 w-full h-full object-cover grayscale-[20%] contrast-[1.1]" 
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBTaW5JkElCOH5rESgrbWzYxI6MYSZr-uLwrQVFVGp1iYkKhcPcQ92-WY9Rvx3MakHIh1pPo6LbXvPvfHVN9Dzx9G1bYqvnTy-7oGXzmx3JzUPYaHAqXC5EvdicUTBmDwV1uXe-SR-wqePP-jdMHAVwHgnsIytPTUbLbfbIBm92SyMbGYDhUUOjhM_fzvMx1CQqlNAGriF2fxsxY2InV3rQrqxor5F7t6xwUB0yjZzZRWDdvBOkx5j87Iq_-l0KFQlbZRLjMKDUEQ" 
         />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
-        <div className="relative text-center z-10 px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative text-center z-10 px-4"
+        >
           <h1 className="text-5xl md:text-7xl text-surface font-headline mb-4 drop-shadow-lg">Secure Your Table</h1>
           <p className="text-surface-container-lowest text-lg max-w-2xl mx-auto font-light tracking-widest uppercase font-label">An Unforgettable Culinary Journey Awaits</p>
-        </div>
+        </motion.div>
       </section>
 
       {/* Reservation Container */}
-      <section className="max-w-7xl mx-auto px-4 -mt-24 relative z-20 mb-20">
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="max-w-7xl mx-auto px-4 -mt-24 relative z-20 mb-20"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 shadow-2xl overflow-hidden rounded-sm">
           {/* Left Column: Image/Atmosphere */}
           <div className="lg:col-span-4 bg-primary text-on-primary p-12 flex flex-col justify-between relative overflow-hidden">
@@ -158,173 +302,13 @@ export default function ReservationsPage() {
             </div>
           </div>
 
-          {/* Right Column: Booking Widget */}
-          <div className="lg:col-span-8 bg-surface-container-lowest p-8 md:p-16">
-            <form onSubmit={handleSubmit} className="space-y-12">
-              {/* Step 1: Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Party Size</label>
-                  <select 
-                    title="Party Size" 
-                    className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
-                    value={formData.partySize}
-                    onChange={(e) => setFormData({ ...formData, partySize: e.target.value })}
-                  >
-                    <option>2 Guests</option>
-                    <option>3 Guests</option>
-                    <option>4 Guests</option>
-                    <option>5 Guests</option>
-                    <option>6+ Guests</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2 font-body">
-                  <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Date</label>
-                  <input 
-                    title="Date" 
-                    className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer" 
-                    type="date" 
-                    required
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Time</label>
-                    <select 
-                      title="Time" 
-                      className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
-                      value={formData.time}
-                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    >
-                    <option>19:00</option>
-                    <option>19:30</option>
-                    <option>20:00</option>
-                    <option>20:30</option>
-                    <option>21:00</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Step 2: Contact Info */}
-              <div className="space-y-8">
-                <h3 className="text-xl font-headline border-b border-surface-container-highest pb-4 text-on-surface">Personal Details</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Full Name</label>
-                    <input 
-                      className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
-                      placeholder="Giacomo Rossi" 
-                      type="text" 
-                      required
-                      value={formData.guestName}
-                      onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Email Address</label>
-                    <input 
-                      className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
-                      placeholder="giacomo@example.it" 
-                      type="email" 
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Phone Number</label>
-                    <input 
-                      className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 font-body" 
-                      placeholder="+39 055 123 4567" 
-                      type="tel" 
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Occasion (Optional)</label>
-                    <select 
-                      title="Occasion" 
-                      className="bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface font-medium focus:ring-0 cursor-pointer font-body"
-                      value={formData.occasion}
-                      onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
-                    >
-                      <option value="">None</option>
-                      <option>Birthday</option>
-                      <option>Anniversary</option>
-                      <option>Business Dinner</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 3: Requests */}
-              <div className="space-y-4">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-outline font-bold font-label">Special Requests or Dietary Requirements</label>
-                <textarea 
-                  className="w-full bg-surface-container-low border-0 p-4 text-on-surface font-medium placeholder:text-outline-variant focus:ring-0 rounded-sm font-body" 
-                  placeholder="Please let us know about any allergies or seating preferences..." 
-                  rows={3}
-                  value={formData.specialRequests}
-                  onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                ></textarea>
-              </div>
-
-              {/* Terms */}
-              <div className="flex items-start gap-4">
-                <input className="mt-1 rounded-sm border-outline-variant text-primary focus:ring-primary h-4 w-4" id="terms" type="checkbox" required />
-                <label className="text-xs text-outline leading-relaxed font-body" htmlFor="terms">
-                  I confirm the reservation details and agree to the <a className="underline text-primary" href="#">cancellation policy</a>. Tables are held for 15 minutes past the reservation time.
-                </label>
-              </div>
-
-              {success && <div className="p-4 bg-tertiary/10 text-tertiary text-sm rounded-sm font-body">{success}</div>}
-              {error && <div className="p-4 bg-error/10 text-error text-sm rounded-sm font-body">{error}</div>}
-
-              <button 
-                disabled={loading}
-                className="w-full bg-primary text-on-primary py-5 text-sm font-bold tracking-[0.3em] uppercase hover:bg-primary-container transition-all flex items-center justify-center gap-3 font-label disabled:opacity-50" 
-                type="submit"
-              >
-                {loading ? "Processing..." : "Confirm Reservation"}
-                <span className="material-symbols-outlined">arrow_right_alt</span>
-              </button>
-            </form>
-          </div>
+            <Suspense fallback={<div className="lg:col-span-8 bg-surface-container-lowest p-16 text-center">Loading Reservation Form...</div>}>
+              <ReservationForm />
+            </Suspense>
         </div>
-      </section>
+      </motion.section>
 
-      {/* CTASection */}
-      <section className="bg-surface-container py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="material-symbols-outlined text-primary mb-6 text-4xl">mail</span>
-          <h2 className="text-4xl font-headline mb-4 text-on-surface">Join Our Newsletter</h2>
-          <p className="text-on-surface-variant mb-12 max-w-xl mx-auto font-body">Stay updated with our latest events and seasonal menus.</p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto border-b-2 border-primary">
-            <input 
-              className="flex-grow bg-transparent border-none py-4 px-2 focus:ring-0 text-on-surface font-body" 
-              placeholder="Your email address" 
-              type="email" 
-              required
-              value={nlEmail}
-              onChange={(e) => setNlEmail(e.target.value)}
-            />
-            <button 
-              disabled={nlLoading}
-              className="bg-primary text-on-primary px-8 py-4 font-bold uppercase text-xs tracking-widest hover:opacity-90 font-label disabled:opacity-50"
-            >
-              {nlLoading ? "..." : "Subscribe"}
-            </button>
-          </form>
-          {nlMessage && (
-            <p className={`mt-4 text-sm font-body ${nlMessage.type === "success" ? "text-primary" : "text-error"}`}>
-              {nlMessage.text}
-            </p>
-          )}
-        </div>
-      </section>
+      <Newsletter />
 
       {/* Footer Map / ActionsBar Area */}
       <section className="grid grid-cols-1 md:grid-cols-2 h-[400px]">

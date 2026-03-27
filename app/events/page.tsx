@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import Newsletter from "@/components/Newsletter";
+import { motion } from "framer-motion";
 
 export default function EventsPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -41,7 +43,7 @@ export default function EventsPage() {
 
     if (submitError) {
       console.error("Submission error:", submitError);
-      setError("Something went wrong. Please try again.");
+      setError(`Failed to submit: ${submitError.message}`);
     } else {
       setSuccess("Thank you! Your event inquiry has been received.");
       setFormData({
@@ -54,33 +56,6 @@ export default function EventsPage() {
       });
     }
     setLoading(false);
-  };
-
-  const [nlEmail, setNlEmail] = useState("");
-  const [nlLoading, setNlLoading] = useState(false);
-  const [nlMessage, setNlMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setNlLoading(true);
-    setNlMessage(null);
-
-    const { error } = await supabase
-      .from("newsletter_subscriptions")
-      .insert([{ email: nlEmail }]);
-
-    if (error) {
-      console.error("Newsletter error:", error);
-      if (error.code === "23505") { // Unique violation
-        setNlMessage({ text: "This email is already subscribed!", type: "success" });
-      } else {
-        setNlMessage({ text: "Something went wrong.", type: "error" });
-      }
-    } else {
-      setNlMessage({ text: "Thank you for subscribing!", type: "success" });
-      setNlEmail("");
-    }
-    setNlLoading(false);
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -102,24 +77,41 @@ export default function EventsPage() {
           <div className="absolute inset-0 bg-on-surface/40"></div>
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-2xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-2xl"
+          >
             <span className="text-tertiary-fixed font-label tracking-[0.3em] uppercase text-xs mb-4 block">Celebrations & Gatherings</span>
             <h1 className="text-6xl md:text-8xl text-surface font-headline leading-[1.1] mb-8">Unforgettable Events</h1>
             <p className="text-lg text-surface/90 font-body max-w-lg mb-10 leading-relaxed">From intimate rehearsal dinners in our wine cellar to grand celebrations under the stars, La Trattoria provides the perfect backdrop for your most cherished moments.</p>
             <a className="inline-block bg-tertiary text-on-tertiary px-10 py-4 text-sm font-label tracking-widest hover:bg-tertiary-container transition-colors" href="#inquiry">INQUIRE NOW</a>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Private Spaces - Bento Grid */}
       <section className="py-32 px-6 max-w-7xl mx-auto">
-        <div className="mb-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="mb-20"
+        >
           <h2 className="text-4xl font-headline mb-4">Our Private Spaces</h2>
           <div className="w-24 h-px bg-primary"></div>
-        </div>
+        </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 h-auto md:h-[900px]">
           {/* Wine Cellar */}
-          <div className="md:col-span-8 group relative overflow-hidden bg-surface-container rounded-md">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -5 }}
+            className="md:col-span-8 group relative overflow-hidden bg-surface-container rounded-md"
+          >
             <img 
               alt="The Wine Cellar" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -132,9 +124,15 @@ export default function EventsPage() {
                 <span className="material-symbols-outlined text-sm">group</span> Capacity: 14 Guests
               </span>
             </div>
-          </div>
+          </motion.div>
           {/* Terrace */}
-          <div className="md:col-span-4 group relative overflow-hidden bg-surface-container rounded-md">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -5 }}
+            className="md:col-span-4 group relative overflow-hidden bg-surface-container rounded-md"
+          >
             <img 
               alt="The Terrace" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -145,9 +143,15 @@ export default function EventsPage() {
               <p className="text-surface/80 text-sm mb-4">Al fresco dining among lemon trees and jasmine. Ideal for cocktail receptions.</p>
               <span className="text-tertiary-fixed text-xs font-label tracking-widest uppercase">Capacity: 40 Guests</span>
             </div>
-          </div>
+          </motion.div>
           {/* Main Hall */}
-          <div className="md:col-span-5 group relative overflow-hidden bg-surface-container rounded-md">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -5 }}
+            className="md:col-span-5 group relative overflow-hidden bg-surface-container rounded-md"
+          >
             <img 
               alt="The Main Hall" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -158,9 +162,14 @@ export default function EventsPage() {
               <p className="text-surface/80 text-sm mb-4">Our grand dining room with soaring ceilings and artisanal chandeliers.</p>
               <span className="text-tertiary-fixed text-xs font-label tracking-widest uppercase">Capacity: 80 Guests</span>
             </div>
-          </div>
+          </motion.div>
           {/* Catering */}
-          <div className="md:col-span-7 bg-surface-container-low p-12 flex flex-col justify-center border-l-4 border-primary">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="md:col-span-7 bg-surface-container-low p-12 flex flex-col justify-center border-l-4 border-primary"
+          >
             <h3 className="text-3xl font-headline mb-6">Exquisite Catering</h3>
             <p className="text-on-surface-variant mb-8 leading-relaxed">Bring the authentic taste of La Trattoria to your home or office. Our bespoke catering packages include curated multi-course menus, professional service staff, and wine pairings selected by our lead sommelier.</p>
             <div className="grid grid-cols-2 gap-6">
@@ -179,46 +188,75 @@ export default function EventsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Packages Section */}
       <section className="bg-surface-container py-32">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
             <h2 className="text-4xl font-headline mb-6">Special Event Packages</h2>
             <p className="text-on-surface-variant max-w-xl mx-auto">Thoughtfully designed experiences to simplify your planning while maximizing elegance.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
             {/* Package 1 */}
-            <div className="bg-surface p-10 flex flex-col items-center text-center shadow-sm">
+            <motion.div 
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              whileHover={{ y: -10 }}
+              viewport={{ once: true }}
+              className="bg-surface p-10 flex flex-col items-center text-center shadow-sm"
+            >
               <span className="material-symbols-outlined text-4xl text-tertiary mb-6">celebration</span>
               <h4 className="text-xl font-headline mb-4">The Tuscan Soirée</h4>
               <p className="text-sm text-on-surface-variant mb-8">4-course tasting menu, welcome prosecco, and artisanal bread service.</p>
               <div className="mt-auto pt-8 border-t border-outline-variant/30 w-full text-on-surface">
                 <span className="text-xs font-label tracking-widest text-primary uppercase">Starting at $95/Guest</span>
               </div>
-            </div>
+            </motion.div>
             {/* Package 2 */}
-            <div className="bg-primary text-on-primary p-10 flex flex-col items-center text-center transform scale-105 shadow-xl">
+            <motion.div 
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.08 }}
+              className="bg-primary text-on-primary p-10 flex flex-col items-center text-center transform scale-105 shadow-xl relative z-10"
+            >
               <span className="material-symbols-outlined text-4xl text-tertiary-fixed mb-6 material-fill">star</span>
               <h4 className="text-xl font-headline mb-4 text-surface">The Grand Gala</h4>
               <p className="text-sm text-surface/80 mb-8">Full venue buyout, 6-course wine pairing dinner, and personalized floral arrangements.</p>
               <div className="mt-auto pt-8 border-t border-on-primary/20 w-full">
                 <span className="text-xs font-label tracking-widest text-tertiary-fixed uppercase">Contact for Custom Pricing</span>
               </div>
-            </div>
+            </motion.div>
             {/* Package 3 */}
-            <div className="bg-surface p-10 flex flex-col items-center text-center shadow-sm">
+            <motion.div 
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -10 }}
+              className="bg-surface p-10 flex flex-col items-center text-center shadow-sm"
+            >
               <span className="material-symbols-outlined text-4xl text-tertiary mb-6">groups</span>
               <h4 className="text-xl font-headline mb-4">Corporate Retreat</h4>
               <p className="text-sm text-on-surface-variant mb-8">Private morning use of the Terrace, light lunch, and afternoon espresso service.</p>
               <div className="mt-auto pt-8 border-t border-outline-variant/30 w-full text-on-surface">
                 <span className="text-xs font-label tracking-widest text-primary uppercase">Starting at $65/Guest</span>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -373,34 +411,7 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* CTASection */}
-      <section className="bg-primary py-24 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-headline text-on-primary mb-4">Join Our Newsletter</h2>
-          <p className="text-surface/80 mb-10 font-body">Stay updated with our latest events and seasonal menus.</p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row gap-4 max-w-md mx-auto">
-            <input 
-              className="flex-grow bg-surface/10 border border-surface/20 text-on-primary placeholder:text-surface/40 px-6 py-3 focus:outline-none focus:ring-1 focus:ring-tertiary-fixed font-body" 
-              placeholder="Your email address" 
-              type="email" 
-              required
-              value={nlEmail}
-              onChange={(e) => setNlEmail(e.target.value)}
-            />
-            <button 
-              disabled={nlLoading}
-              className="bg-tertiary text-on-tertiary px-8 py-3 text-xs font-label tracking-widest hover:bg-tertiary-container transition-colors uppercase disabled:opacity-50"
-            >
-              {nlLoading ? "..." : "Subscribe"}
-            </button>
-          </form>
-          {nlMessage && (
-            <p className={`mt-4 text-sm font-body ${nlMessage.type === "success" ? "text-surface" : "text-error-container"}`}>
-              {nlMessage.text}
-            </p>
-          )}
-        </div>
-      </section>
+      <Newsletter />
     </main>
   );
 }

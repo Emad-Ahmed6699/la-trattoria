@@ -1,4 +1,6 @@
 "use client";
+import Newsletter from "@/components/Newsletter";
+import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
@@ -6,11 +8,16 @@ export default function AboutPage() {
       {/* Hero Section */}
       <header className="relative min-h-[70vh] flex items-center pt-32 overflow-hidden">
         <div className="container mx-auto px-6 grid md:grid-cols-12 gap-12 items-center">
-          <div className="md:col-span-7 z-10">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="md:col-span-7 z-10"
+          >
             <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-xs mb-4 block">Est. 1994</span>
             <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8">Crafting Memories <br /><span className="text-primary italic">Through Soil & Soul</span></h1>
             <p className="text-lg md:text-xl text-on-surface-variant max-w-xl leading-relaxed font-body">A sanctuary for the senses in the heart of the city, where ancient Italian traditions meet modern culinary innovation.</p>
-          </div>
+          </motion.div>
           <div className="md:col-span-5 relative">
             <div className="aspect-[4/5] bg-surface-container overflow-hidden rounded-sm relative">
               <img 
@@ -31,7 +38,13 @@ export default function AboutPage() {
       <section className="py-32 bg-surface-container-low">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-20 items-center">
-            <div className="order-2 md:order-1 relative">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="order-2 md:order-1 relative"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-12">
                   <img className="w-full aspect-square object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7PPZafqZdz1c5RQCUPNu9SeZbDuPbvzEgAFsJXcMEFuwesS1lwhvcLdWvH9iiECPzM_H4rfj5-S4jKPJ-nL7Mf01cOvPFpUXIm4rdoIgDscl6N47iHyE6yV3qvYFPgvKosBtyTnpEj_g4smNVpPwD3N0jPh9kXIckVaKqperomMRWyTnic7ikStAE7F39N5TjszpMgiDxUPeXeCYW4Hy5Zn_EebBxDhQBcM9ut_g6-ZNLoz5AVTK_OBBQ42KqLDUxmmYG8O8wBsA" alt="Artisanal pasta" />
@@ -42,15 +55,21 @@ export default function AboutPage() {
                   <img className="w-full aspect-square object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7NOl_kDCDseje65sQFnLqGCwU9wK1VrCUNCh-4MeeRPQRCESVTaFSy1RDdGq-HAR2N-OMs50Yd2NvgJ0CZmRwR-L9wjCMreqll9-mp7sDj9NXc6BE-gxfVQBKfGmoSoWfqIaMCPYWd0yfD0wzrh-9jKEO7EhD-EZ7N0ng9PGuZO0jGB8VO5lpQeJs8kyOgmKmlIx511wAh3Y4L2o4KJ8oCN3zZPR2ThZaHDjeBq_1XwlRRPRsPhU4Uk7AJVxvo_1n6d760EssAp4" alt="Ingredients" />
                 </div>
               </div>
-            </div>
-            <div className="order-1 md:order-2">
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="order-1 md:order-2"
+            >
               <h2 className="font-headline text-4xl md:text-5xl mb-8">A Legacy Rooted in <span className="text-secondary italic">Authenticity</span></h2>
               <div className="space-y-6 text-on-surface-variant leading-loose font-body">
                 <p>La Trattoria began as a vision to bring the quiet luxury of the Tuscan countryside to our neighborhood. Founded by the Rossi family, it was never just about the food—it was about the art of the long lunch, the shared bottle of Chianti, and the reverence for seasonal ingredients.</p>
                 <p>Our kitchen is a dialogue between the past and the present. We use 100-year-old sourdough starters for our focaccia and hand-rolled pasta techniques passed down through generations, yet we plate with the precision of a modern atelier.</p>
                 <p>We believe that luxury is found in the details: the weight of the silver, the warmth of the lighting, and the honesty of the flavors on the plate.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -105,15 +124,33 @@ export default function AboutPage() {
             <h2 className="font-headline text-4xl md:text-5xl mb-4 text-on-surface">Our Culinary Philosophy</h2>
             <div className="w-24 h-1 bg-primary mx-auto"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]"
+          >
             {/* Bento Item 1 */}
-            <div className="md:col-span-1 md:row-span-2 bg-surface p-10 flex flex-col justify-end group border-l-4 border-primary">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              className="md:col-span-1 md:row-span-2 bg-surface p-10 flex flex-col justify-end group border-l-4 border-primary shadow-sm"
+            >
               <span className="material-symbols-outlined text-primary mb-6 text-4xl material-fill">eco</span>
               <h5 className="font-headline text-2xl mb-4 text-on-surface">The Earth First</h5>
               <p className="text-sm text-on-surface-variant leading-relaxed font-body">Our menu breathes with the seasons. We follow the rhythm of the soil, ensuring that every plate reflects the true essence of the harvest.</p>
-            </div>
+            </motion.div>
             {/* Bento Item 2 */}
-            <div className="md:col-span-2 bg-primary text-on-primary p-10 flex items-center gap-12 overflow-hidden relative">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              className="md:col-span-2 bg-primary text-on-primary p-10 flex items-center gap-12 overflow-hidden relative shadow-sm"
+            >
               <div className="w-1/2 relative z-10">
                 <h5 className="font-headline text-2xl mb-4">Heritage Reimagined</h5>
                 <p className="text-sm opacity-80 leading-relaxed font-body">While we honor the recipes of our ancestors, we are not afraid of progress. We use molecular techniques to enhance texture while preserving the soul of the flavor.</p>
@@ -121,38 +158,36 @@ export default function AboutPage() {
               <div className="w-1/2 absolute -right-10 top-0 bottom-0 rotate-12 scale-110 opacity-40">
                 <img className="w-full h-full object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGxaW8A6FT5Vf7SsY-ORnGzYi_XcZEvNLcXDViuU6UKIYsz-5hFaqpOAvaXIpf9KMjK_Va7IPiG9-TiRFgKHCGMB83OC-sDHV4gTFSF1ReppJInYA8jCF-nd_Lx58g7XkKs81zr27XwxR1LA0eyOIIxjd3kjndt120rRv_CQ4qWsV6I7Lzqo9zPSMSx002v86GQlLQME_LqokShYC1SatGcn-ODwubOz62cRNj56zrF8YbynQgYthp9TGLllhl1v232plv9MzZlh4" alt="Heritage" />
               </div>
-            </div>
+            </motion.div>
             {/* Bento Item 3 */}
-            <div className="bg-surface-container-highest p-10 flex flex-col justify-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              className="bg-surface-container-highest p-10 flex flex-col justify-center shadow-sm"
+            >
               <h5 className="font-headline text-xl mb-3 text-on-surface">Slow Food</h5>
               <p className="text-xs text-on-surface-variant uppercase tracking-widest font-bold mb-4 font-label">The Art of Patience</p>
               <p className="text-sm text-on-surface-variant leading-relaxed font-body">Time is our most precious ingredient. From 48-hour dough ferments to slow-simmered ragu, we never rush the process.</p>
-            </div>
+            </motion.div>
             {/* Bento Item 4 */}
-            <div className="bg-tertiary-fixed p-10 flex flex-col justify-center text-on-tertiary-fixed-variant">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              className="bg-tertiary-fixed p-10 flex flex-col justify-center text-on-tertiary-fixed-variant shadow-sm"
+            >
               <span className="material-symbols-outlined mb-4 text-3xl">wine_bar</span>
               <h5 className="font-headline text-xl mb-2">Curation</h5>
               <p className="text-sm leading-relaxed font-body">A cellar of 400+ vintages, curated specifically to elevate the nuances of our regional cuisine.</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTASection */}
-      <section className="py-24 bg-surface-container-low">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto bg-surface p-12 lg:p-20 shadow-sm border border-outline-variant/10 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl mb-4 text-on-surface">Join Our Newsletter</h2>
-            <p className="text-on-surface-variant mb-10 font-body">Stay updated with our latest events and seasonal menus.</p>
-            <form className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
-              <input className="flex-grow bg-transparent border-b border-outline-variant py-3 px-2 focus:border-tertiary outline-none text-sm transition-colors text-on-surface" placeholder="Your email address" type="email" />
-              <button className="bg-primary text-on-primary px-10 py-3 rounded-sm text-sm font-bold uppercase tracking-widest hover:opacity-95 transition-opacity font-label">
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+      <Newsletter />
     </main>
   );
 }

@@ -139,6 +139,7 @@ const emailTemplates = {
             <p><strong>التاريخ:</strong> ${data.date}</p>
             <p><strong>الوقت:</strong> ${data.time}</p>
             <p><strong>عدد الأشخاص:</strong> ${data.guests}</p>
+            ${data.appliedPromo ? `<p style="color: #C96E4B;"><strong>🎁 العرض المطبق:</strong> ${data.appliedPromo}</p>` : ''}
             ${getSpecialRequestsHtml(data.requests)}
           </div>
           <p style="text-align: center;">
@@ -171,20 +172,21 @@ export async function sendReservationConfirmation(data: {
   date: string;
   time: string;
   guests: number;
+  appliedPromo?: string;
 }) {
   try {
     const template = emailTemplates.reservationConfirmation(data);
     
     // Send to customer
     await resend.emails.send({
-      from: 'La Trattoria <notifications@latrattoria.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: data.email,
       ...template,
     });
 
     // Notify admin
     await resend.emails.send({
-      from: 'La Trattoria <notifications@latrattoria.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: adminEmail,
       ...emailTemplates.adminNotification('reservation', data),
     });
@@ -205,7 +207,7 @@ export async function sendContactAcknowledgement(data: {
   try {
     // Send confirmation to customer
     await resend.emails.send({
-      from: 'La Trattoria <notifications@latrattoria.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: data.email,
       ...emailTemplates.contactAcknowledgement({
         name: data.name,
@@ -216,7 +218,7 @@ export async function sendContactAcknowledgement(data: {
 
     // Notify admin
     await resend.emails.send({
-      from: 'La Trattoria <notifications@latrattoria.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: adminEmail,
       ...emailTemplates.adminNotification('inquiry', data),
     });
@@ -233,7 +235,7 @@ export async function sendNewsletterWelcome(email: string) {
     const template = emailTemplates.newsletterWelcome(email);
     
     await resend.emails.send({
-      from: 'La Trattoria <newsletter@latrattoria.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: email,
       ...template,
     });

@@ -29,9 +29,10 @@ export async function POST(request: Request) {
 
     // Send welcome email
     try {
+      console.log('Sending newsletter welcome to:', data.email);
       await sendNewsletterWelcome(data.email);
-    } catch (emailError) {
-      console.error('Email sending error:', emailError);
+    } catch (emailError: any) {
+      console.error('Email sending error (Newsletter):', emailError.message || emailError);
       // Don't fail the subscription if email fails
     }
 
@@ -39,8 +40,8 @@ export async function POST(request: Request) {
       success: true, 
       message: 'Thank you for subscribing! Check your email for welcome details.' 
     });
-  } catch (error) {
-    console.error('Newsletter error:', error);
-    return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Newsletter unexpected error:', error.message || error);
+    return NextResponse.json({ error: 'Failed to subscribe: ' + (error.message || 'Unknown error') }, { status: 500 });
   }
 }

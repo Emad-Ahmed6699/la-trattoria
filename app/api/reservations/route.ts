@@ -12,22 +12,20 @@ export async function POST(request: Request) {
     }
 
     // Save to Supabase
-    const { data: reservationData, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from('reservations')
       .insert([
         {
-          customer_name: data.name,
+          guest_name: data.name,
           email: data.email,
           phone: data.phone,
-          reservation_date: data.date,
-          reservation_time: data.time,
-          guests: Number.parseInt(data.guests, 10),
+          date: data.date,
+          time: data.time,
+          party_size: Number.parseInt(data.guests, 10),
           special_requests: data.requests || null,
-          status: 'pending',
+          applied_promo: data.appliedPromo || null,
         },
-      ])
-      .select()
-      .single();
+      ]);
 
     if (dbError) {
       console.error('Database error:', dbError);
@@ -42,6 +40,7 @@ export async function POST(request: Request) {
         date: data.date,
         time: data.time,
         guests: data.guests,
+        appliedPromo: data.appliedPromo,
       });
     } catch (emailError) {
       console.error('Email sending error:', emailError);
@@ -50,8 +49,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Reservation confirmed. Check your email for details.',
-      data: reservationData
+      message: 'Reservation confirmed. Check your email for details.'
     });
   } catch (error) {
     console.error('Reservation error:', error);

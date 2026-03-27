@@ -5,11 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import Newsletter from "@/components/Newsletter";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomePage() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [promo, setPromo] = useState<any>(null);
 
   useEffect(() => {
@@ -26,199 +25,324 @@ export default function HomePage() {
     fetchPromo();
   }, []);
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setMessage({ text: result.message || "Thank you for subscribing!", type: "success" });
-        setEmail("");
-      } else {
-        const error = await response.json();
-        setMessage({ text: error.error || "Something went wrong. Please try again later.", type: "error" });
-      }
-    } catch (err) {
-      console.error("Newsletter error:", err);
-      setMessage({ text: "Something went wrong. Please try again later.", type: "error" });
-    }
-    setLoading(false);
-  };
   return (
-    <main>
+    <main className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center px-6 lg:px-20 py-20 overflow-hidden animate-fade-in">
-        <div className="absolute inset-0 -z-10">
-          <img 
-            className="w-full h-full object-cover opacity-90" 
+      <section className="relative min-h-[95vh] flex items-center px-6 lg:px-20 py-20 overflow-hidden">
+        <motion.div 
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.95 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 -z-10"
+        >
+          <Image 
+            className="w-full h-full object-cover" 
             alt="Signature Italian pasta dish with fresh herbs" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKKQLakESqPJIjH3zSGmUPXx68rdvtHK3wr6q_mZrnQQ2mjRSw_1OL4cTO2vsnv3_SYJ9o8PuHlsSOuy3TquO9tFeuDfqoKKpPL4B4wMMWg4Ix9ZAlfYyaXbbdaD3-nZcyr81t5AsTADvC5L4efmN642gdSksVgO0896w5iMUiiiLHlK51KkyqT0j2WO0gbBRCs65ZY9n-qsJ5xWBaOrLmfKlHqa8wP2_Ynnsrh-EkYlRK99vVckM3JiCGlMbLBW8kr240DMI3D4c"
+            src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=2000"
+            fill
+            priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent"></div>
-        </div>
-        <div className="max-w-2xl animate-slide-up delay-200">
-          <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Est. 1984 — Tuscany</span>
-          <h1 className="text-6xl lg:text-8xl font-headline text-primary mb-6 leading-tight">Authenticity in <br/>Every Harvest.</h1>
-          <p className="text-xl text-on-surface-variant mb-10 leading-relaxed font-body max-w-lg">
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+        </motion.div>
+        
+        <div className="max-w-3xl relative z-10">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-tertiary font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block"
+          >
+            Est. 1984 — Tuscany Heritage
+          </motion.span>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 1 }}
+            className="text-7xl lg:text-9xl font-headline text-primary mb-8 leading-[0.85] tracking-tight"
+          >
+            Authenticity <br />
+            <motion.span 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              className="italic text-tertiary ml-8 lg:ml-20"
+            >
+              in Every Harvest.
+            </motion.span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="text-xl text-on-surface-variant mb-12 leading-relaxed font-body max-w-xl border-l border-primary/20 pl-8"
+          >
             Experience a journey through the rolling hills of Italy. Where traditional techniques meet modern viticulture in the heart of the city.
-          </p>
-          <div className="flex items-center gap-6">
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.8 }}
+            className="flex flex-wrap items-center gap-10"
+          >
             <Link 
               href="/reservations" 
-              className="bg-primary text-on-primary px-8 py-4 rounded-sm font-bold text-lg hover:shadow-xl transition-all"
+              className="bg-primary text-on-primary px-10 py-5 rounded-sm font-bold text-sm tracking-widest uppercase hover:bg-tertiary transition-all shadow-xl hover:-translate-y-1"
             >
               Reserve a Table
             </Link>
             <Link 
               href="/menu" 
-              className="text-primary font-bold flex items-center gap-2 hover:translate-x-1 transition-transform"
+              className="text-primary font-bold flex items-center gap-3 group tracking-widest uppercase text-xs"
             >
-              Explore Our Menu <span className="material-symbols-outlined">arrow_forward</span>
+              Explore Our Menu 
+              <motion.span 
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="material-symbols-outlined font-bold"
+              >
+                arrow_forward
+              </motion.span>
             </Link>
-          </div>
+          </motion.div>
         </div>
+
+        {/* Floating Accent */}
+        <motion.div 
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 5, 0]
+          }}
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+          className="absolute right-20 bottom-20 hidden lg:block w-32 h-32 border border-primary/10 rounded-full flex items-center justify-center p-4 backdrop-blur-sm"
+        >
+           <div className="text-[10px] font-bold text-primary/40 uppercase tracking-tighter text-center">Harvested With <br />Love</div>
+        </motion.div>
       </section>
 
       {/* Dynamic Promotion Banner */}
-      {promo && (
-        <section className="bg-primary text-on-primary py-4 px-6 overflow-hidden relative">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4 text-center">
-            <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-tertiary-fixed animate-pulse">campaign</span>
-              <span className="font-label text-[10px] uppercase tracking-[0.3em] font-bold">{promo.discount_tag || "SPECIAL OFFER"}</span>
-            </div>
-            <h2 className="text-xl md:text-2xl font-headline italic">&quot;{promo.title}: {promo.description}&quot;</h2>
-            {promo.valid_until && (
-              <span className="text-[10px] font-label uppercase tracking-widest bg-on-primary/10 px-3 py-1 rounded-full">
-                Valid until {new Date(promo.valid_until).toLocaleDateString()}
-              </span>
-            )}
-            <Link href="/reservations" className="bg-tertiary text-on-tertiary px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest hover:bg-tertiary-container transition-all ml-0 md:ml-4">
-              Claim Offer
-            </Link>
-          </div>
-        </section>
-      )}
+      <AnimatePresence>
+        {promo && (
+          <motion.section 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-primary text-on-primary py-6 px-6 overflow-hidden relative"
+          >
+            <motion.div 
+              initial={{ x: -100 }}
+              animate={{ x: 0 }}
+              className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 text-center"
+            >
+              <div className="flex items-center gap-4">
+                <motion.span 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="material-symbols-outlined text-tertiary-fixed text-3xl"
+                >
+                  campaign
+                </motion.span>
+                <div className="text-left">
+                  <span className="font-label text-[10px] uppercase tracking-[0.4em] font-bold block leading-none mb-1">{promo.discount_tag || "SPECIAL OFFER"}</span>
+                  <h2 className="text-2xl font-headline italic leading-none">&quot;{promo.title}&quot;</h2>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="h-10 w-[1px] bg-white/20 hidden md:block"></div>
+                <p className="text-sm font-body italic opacity-80">{promo.description}</p>
+              </div>
+              <Link href={`/reservations?promo=${encodeURIComponent(promo.title)}`} className="bg-tertiary text-on-tertiary px-8 py-3 rounded-sm text-[10px] font-bold uppercase tracking-widest hover:bg-tertiary-container transition-all shadow-lg active:scale-95 ml-0 md:ml-4">
+                Claim Offer
+              </Link>
+            </motion.div>
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       {/* About Us Teaser */}
-      <section className="py-32 px-6 lg:px-20 bg-surface-container-low overflow-hidden">
-        <div className="grid lg:grid-cols-2 gap-20 items-center animate-slide-up">
-          <div className="relative">
-            <div className="bg-surface-container-highest w-full aspect-[4/5] rounded-md overflow-hidden">
-              <img 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" 
+      <section className="py-40 px-6 lg:px-20 bg-background relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-surface-container-low/50 -skew-x-12 translate-x-1/2 -z-10"></div>
+        
+        <div className="grid lg:grid-cols-2 gap-24 items-center">
+          <motion.div 
+            initial={{ opacity: 0, filter: "blur(10px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1 }}
+            className="relative"
+          >
+            <div className="bg-surface-container-highest w-full aspect-[4/5] rounded-sm overflow-hidden shadow-2xl skew-y-1">
+              <Image 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100" 
                 alt="Chef preparing fresh handmade pasta dough" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-2cMbgc25XE30GU2VCiS83KVulQqcP9PGwfbnb-pPdhqauC9IqWccx1FLEL2iufeoDK4aQWrtYFZS7FCOhShlbQuEbChomS0GeC612DtLV19Gd09gjROhklDjtdn9ffBnWOs5VS9F82QujLyu6e5yoA_FP3N8i7__dLohQDUqzMtKETfNha6pH4Huoe6U9qau_a2-V7mKjQo_U3OClpNP7giCh_jZ56jQoEd6DwAy3Z1npicu0pO6FSG8iCIe9kHHZttvd_QRXrk"
+                src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200"
+                fill
               />
             </div>
-            <div className="absolute -bottom-10 -right-10 hidden lg:block bg-surface p-8 shadow-sm max-w-xs border border-outline-variant/10">
-              <p className="font-headline italic text-lg text-primary">"The secret is the silence between the ingredients."</p>
-              <p className="mt-4 text-sm font-bold tracking-widest text-on-surface-variant uppercase">— Chef Marco Rossi</p>
-            </div>
-          </div>
-          <div>
-            <h2 className="text-4xl lg:text-5xl font-headline text-on-surface mb-8">Crafting Heritage <br/>On Your Plate</h2>
-            <p className="text-lg text-on-surface-variant leading-relaxed mb-8">
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="absolute -bottom-12 -right-12 hidden lg:block bg-surface p-12 shadow-2xl max-w-sm border border-primary/5 backdrop-blur-sm"
+            >
+              <span className="material-symbols-outlined text-primary mb-4 block">format_quote</span>
+              <p className="font-headline italic text-2xl text-primary leading-tight">"The secret is the silence between the ingredients."</p>
+              <div className="flex items-center gap-4 mt-8">
+                <div className="w-8 h-[1px] bg-primary/30"></div>
+                <p className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant uppercase">— Chef Marco Rossi</p>
+              </div>
+            </motion.div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-tertiary font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block font-bold">The Heritage</span>
+            <h2 className="text-5xl lg:text-7xl font-headline text-on-surface mb-10 leading-[1.1]">Crafting Heritage <br/><span className="italic text-primary">On Your Plate</span></h2>
+            <p className="text-xl text-on-surface-variant leading-relaxed mb-8 font-body">
               At La Trattoria, we believe that fine dining is an act of preservation. Every ingredient is sourced from artisanal producers who respect the rhythm of the seasons. 
             </p>
-            <p className="text-lg text-on-surface-variant leading-relaxed mb-12">
-              Our cellar houses over 400 labels, curated by our master sommelier to ensure every pairing is an editorial experience.
+            <p className="text-xl text-on-surface-variant leading-relaxed mb-12 font-body opacity-80">
+              Our cellar houses over 400 labels, curated by our master sommelier to ensure every pairing is an editorial experience that tells a story of the soil.
             </p>
             <Link 
               href="/about-us" 
-              className="border-b-2 border-primary text-primary font-bold pb-1 hover:border-tertiary transition-colors"
+              className="inline-flex items-center gap-4 text-primary font-bold tracking-widest uppercase text-xs border-b-2 border-primary/20 pb-2 hover:border-primary transition-all group"
             >
               Learn Our History
+              <span className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Chef's Specials Bento Grid */}
-      <section className="py-32 px-6 lg:px-20 bg-background overflow-hidden">
-        <div className="mb-20 animate-fade-in">
-          <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-sm block mb-2">Seasonal Selection</span>
-          <h2 className="text-4xl lg:text-5xl font-headline text-on-surface">Chef's Signature Specials</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 animate-slide-up delay-300">
+      {/* Chef's Specials Premium Bento Grid */}
+      <section className="py-40 px-6 lg:px-20 bg-surface-container-lowest overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-24 text-center max-w-3xl mx-auto"
+        >
+          <span className="text-tertiary font-bold tracking-[0.4em] uppercase text-[10px] block mb-4">Seasonal Selection</span>
+          <h2 className="text-5xl lg:text-7xl font-headline text-on-surface">Chef's Signature Specials</h2>
+          <div className="w-20 h-[2px] bg-primary/20 mx-auto mt-8"></div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           {/* Large Feature Card */}
-          <div className="md:col-span-8 group relative overflow-hidden bg-surface-container rounded-lg">
-            <div className="relative aspect-[16/9] overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -10 }}
+            className="md:col-span-8 group relative overflow-hidden bg-background rounded-sm shadow-xl"
+          >
+            <div className="relative aspect-[21/9] lg:aspect-[16/7] overflow-hidden">
               <Image 
                 src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2000"
                 alt="Wild Mushroom & Truffle Risotto" 
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
             </div>
-            <div className="p-8 flex justify-between items-end">
-              <div>
-                <span className="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Chef's Special</span>
-                <h3 className="text-3xl font-headline text-primary mb-2">Wild Mushroom & Truffle Risotto</h3>
-                <p className="text-on-surface-variant">Arborio rice slow-cooked with foraged Umbrian truffles and aged Parmigiano.</p>
+            <div className="p-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10 -mt-20">
+              <div className="bg-white/95 backdrop-blur-md p-8 shadow-2xl border-t-4 border-primary max-w-lg">
+                <span className="text-primary text-[10px] font-bold uppercase tracking-[0.4em] mb-3 block">Award Winning</span>
+                <h3 className="text-4xl font-headline text-on-surface mb-3 italic">Wild Mushroom & Truffle Risotto</h3>
+                <p className="text-on-surface-variant font-body">Arborio rice slow-cooked with foraged Umbrian truffles and aged Parmigiano Reggiano.</p>
               </div>
-              <span className="text-2xl font-headline text-tertiary">$34</span>
+              <div className="bg-primary text-on-primary p-6 shadow-2xl flex flex-col items-center">
+                <span className="text-[10px] uppercase font-bold tracking-widest opacity-70">Price</span>
+                <span className="text-3xl font-headline">$34</span>
+              </div>
             </div>
-          </div>
+          </motion.div>
+
           {/* Small Card 1 */}
-          <div className="md:col-span-4 group bg-surface-container-low p-6 rounded-lg flex flex-col justify-between">
-            <div className="relative aspect-square mb-6 overflow-hidden rounded-md">
-              <Image 
-                src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=800"
-                alt="Deconstructed Tiramisu" 
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-            </div>
-            <div>
-              <h3 className="text-xl font-headline text-on-surface mb-2">Deconstructed Tiramisu</h3>
-              <p className="text-sm text-on-surface-variant">Mascarpone foam, espresso-soaked savoiardi, 24k gold leaf.</p>
-              <p className="mt-4 font-bold text-primary">$18</p>
-            </div>
-          </div>
-          {/* Small Card 2 */}
-          <div className="md:col-span-4 group bg-surface-container-low p-6 rounded-lg flex flex-col justify-between">
-            <div className="relative aspect-[3/4] rounded-sm overflow-hidden shadow-2xl">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -10 }}
+            className="md:col-span-4 group bg-background p-8 rounded-sm shadow-lg flex flex-col border border-primary/5"
+          >
+            <div className="relative aspect-square mb-10 overflow-hidden shadow-2xl group-hover:shadow-primary/10 transition-shadow">
               <Image 
                 src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1200"
-                alt="Wine Selection"
+                alt="Deconstructed Tiramisu" 
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                className="object-cover group-hover:scale-110 transition-transform duration-1000"
               />
+              <div className="absolute top-4 left-4 bg-tertiary text-on-tertiary text-[8px] font-bold uppercase tracking-[0.4em] px-3 py-1">Limited</div>
             </div>
-            <div className="mt-6">
-              <h3 className="text-xl font-headline text-on-surface mb-2">2016 Brunello di Montalcino</h3>
-              <p className="text-sm text-on-surface-variant">Our sommelier's choice pairing for red meats and aged cheeses.</p>
-              <p className="mt-4 font-bold text-primary">$22 / glass</p>
+            <div className="mt-auto">
+              <h3 className="text-2xl font-headline text-on-surface mb-3 italic">Deconstructed Tiramisu</h3>
+              <p className="text-sm text-on-surface-variant font-body leading-relaxed">Mascarpone foam, espresso-soaked savoiardi, finish with 24k gold leaf and artisan cocoa.</p>
+              <div className="w-12 h-[1px] bg-primary/20 my-6"></div>
+              <p className="text-xl font-headline text-primary">$18</p>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Small Card 2 */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -10 }}
+            className="md:col-span-4 group bg-background p-8 rounded-sm shadow-lg flex flex-col border border-primary/5"
+          >
+             <div className="relative aspect-square mb-10 overflow-hidden shadow-2xl group-hover:shadow-primary/10 transition-shadow">
+                <Image 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1HJ6vRZPg3G6Ebjo7b5Ct_cTpW3De-oeDYb7o0npW1HrFlEP2lrWFljb398t7RNzyIYII1PYVyzmrqLp_BeR4nZThGc9WfAX4s42CIpM6Ta-Rcq-q6kynERJaqEJfXZdScR1i632bzRN8fXcsmCuTS0F6m-dCb6wmQZIwpE8UVfhlYAzJJzL2HnKAeYHuMfu5arOmvM1BRFBu-PFIo6ayLp4agnopVbZz4y93OKT9AgvpmfbZoljY4YdxYTFiwdHVl41fl7odEck"
+                  alt="Wine Selection"
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                />
+            </div>
+            <div className="mt-auto">
+              <span className="text-primary text-[10px] font-bold uppercase tracking-widest mb-3 block">Sommelier's Choice</span>
+              <h3 className="text-2xl font-headline text-on-surface mb-3 italic">2016 Brunello di Montalcino</h3>
+              <p className="text-sm text-on-surface-variant font-body leading-relaxed">A powerful and elegant red, perfect for aged steaks and truffle-based dishes.</p>
+              <div className="w-12 h-[1px] bg-primary/20 my-6"></div>
+              <p className="text-xl font-headline text-primary">$22 <span className="text-xs uppercase tracking-widest opacity-50 ml-2">/ glass</span></p>
+            </div>
+          </motion.div>
+
           {/* Long Feature Card */}
-          <div className="md:col-span-8 group relative overflow-hidden bg-surface-container rounded-lg flex flex-col md:flex-row">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -10 }}
+            className="md:col-span-8 group relative overflow-hidden bg-primary/5 rounded-sm flex flex-col md:flex-row border border-primary/10"
+          >
             <div className="md:w-1/2 relative aspect-square md:aspect-auto overflow-hidden">
               <Image 
-                src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=800"
+                src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=1200"
                 alt="Oven Roasted Branzino"
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-[1.5s]"
               />
             </div>
-            <div className="md:w-1/2 p-8 flex flex-col justify-center">
-              <h3 className="text-2xl font-headline text-primary mb-4">Oven Roasted Branzino</h3>
-              <p className="text-on-surface-variant mb-6">Whole Mediterranean seabass infused with lemon, rosemary, and cold-pressed olive oil.</p>
+            <div className="md:w-1/2 p-12 flex flex-col justify-center bg-white/40 backdrop-blur-xl">
+              <span className="bg-primary text-on-primary self-start px-4 py-1 text-[8px] font-bold uppercase tracking-[0.3em] mb-6">New Season</span>
+              <h3 className="text-4xl font-headline text-primary mb-6 italic">Oven Roasted Branzino</h3>
+              <p className="text-on-surface-variant mb-8 leading-relaxed font-body">Whole Mediterranean seabass infused with Amalfi lemon, fresh rosemary, and cold-pressed extra virgin olive oil from our estate.</p>
               <div className="flex items-center justify-between mt-auto">
-                <span className="text-xl font-headline text-tertiary">$42</span>
-                <button className="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-sm text-sm font-bold">New Arrival</button>
+                <span className="text-3xl font-headline text-tertiary">$42</span>
+                <button className="text-primary font-bold tracking-widest uppercase text-[10px] border-b border-primary/30 hover:border-primary transition-all">Details</button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -226,102 +350,105 @@ export default function HomePage() {
       <TestimonialsSection />
 
       {/* Recent Awards */}
-      <section className="py-24 px-6 lg:px-20 bg-surface-container-highest">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          <div className="lg:w-1/3">
-            <h2 className="text-3xl font-headline text-on-surface mb-4">Accolades & Distinctions</h2>
-            <p className="text-on-surface-variant">A testament to our commitment to the culinary arts and hospitality excellence.</p>
-          </div>
-          <div className="lg:w-2/3 flex flex-wrap justify-center lg:justify-end gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="text-center">
-              <span className="material-symbols-outlined text-4xl text-primary block mb-2 material-fill">stars</span>
-              <p className="font-bold text-xs tracking-tighter uppercase font-label">Michelin Guide</p>
-              <p className="text-[10px] uppercase font-label">2021-2023</p>
-            </div>
-            <div className="text-center">
-              <span className="material-symbols-outlined text-4xl text-primary block mb-2 material-fill">restaurant</span>
-              <p className="font-bold text-xs tracking-tighter uppercase font-label">James Beard Finalist</p>
-              <p className="text-[10px] uppercase font-label">2022</p>
-            </div>
-            <div className="text-center">
-              <span className="material-symbols-outlined text-4xl text-primary block mb-2 material-fill">wine_bar</span>
-              <p className="font-bold text-xs tracking-tighter uppercase font-label">Wine Spectator</p>
-              <p className="text-[10px] uppercase font-label">Grand Award</p>
-            </div>
-            <div className="text-center">
-              <span className="material-symbols-outlined text-4xl text-primary block mb-2 material-fill">public</span>
-              <p className="font-bold text-xs tracking-tighter uppercase font-label">Condé Nast Traveler</p>
-              <p className="text-[10px] uppercase font-label">Top 10 Global</p>
-            </div>
-          </div>
+      <section className="py-32 px-6 lg:px-20 bg-surface-container-highest/30">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:w-1/3"
+          >
+            <span className="text-primary text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block">Recognition</span>
+            <h2 className="text-4xl font-headline text-on-surface mb-6 italic leading-tight">Accolades & <br />Distinctions</h2>
+            <p className="text-on-surface-variant font-body">A testament to our unwavering commitment to the culinary arts and hospitality excellence since our founding.</p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-12 lg:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-1000"
+          >
+            {[
+              { icon: "stars", title: "Michelin Guide", subtitle: "2021-2023" },
+              { icon: "restaurant", title: "James Beard", subtitle: "Finalist 2022" },
+              { icon: "wine_bar", title: "Wine Spectator", subtitle: "Grand Award" },
+              { icon: "public", title: "CN Traveler", subtitle: "Top 10 Global" }
+            ].map((award, idx) => (
+              <motion.div 
+                key={idx}
+                whileHover={{ scale: 1.1, opacity: 1, filter: "grayscale(0%)" }}
+                className="text-center"
+              >
+                <span className="material-symbols-outlined text-5xl text-primary block mb-4 material-fill">{award.icon}</span>
+                <p className="font-bold text-[10px] tracking-[0.1em] uppercase font-label mb-1 text-on-surface">{award.title}</p>
+                <p className="text-[10px] uppercase font-label text-primary/60">{award.subtitle}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* CTASection */}
-      <section className="py-32 px-6 lg:px-20 text-center">
-        <div className="max-w-3xl mx-auto bg-primary px-8 lg:px-20 py-24 rounded-lg shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute top-0 left-0 w-64 h-64 bg-surface rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-tertiary-container rounded-full translate-x-1/3 translate-y-1/3"></div>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-headline text-on-primary mb-6">Join Our Newsletter</h2>
-          <p className="text-primary-fixed/80 text-lg mb-12">Stay updated with our latest events and seasonal menus.</p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-            <input 
-              className="flex-1 bg-surface-container-lowest border-none py-4 px-6 rounded-sm focus:ring-2 focus:ring-tertiary text-on-surface" 
-              placeholder="Your email address" 
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button 
-              disabled={loading}
-              className="bg-tertiary text-on-tertiary px-8 py-4 rounded-sm font-bold hover:bg-tertiary-container transition-colors disabled:opacity-50"
-            >
-              {loading ? "..." : "Subscribe"}
-            </button>
-          </form>
-          {message && (
-            <p className={`mt-4 text-sm ${message.type === "success" ? "text-on-primary" : "text-error-container"}`}>
-              {message.text}
-            </p>
-          )}
-        </div>
-      </section>
+      <Newsletter />
 
       {/* Gift Cards Promotion Section */}
-      <section className="py-32 px-6 lg:px-20 bg-surface-container-lowest border-t border-outline-variant/10">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative aspect-[4/3] rounded-sm overflow-hidden shadow-2xl">
+      <section className="py-40 px-6 lg:px-20 bg-background border-t border-outline-variant/10 relative overflow-hidden">
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 translate-x-1/2 translate-y-1/2"></div>
+        
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-24 items-center">
+          <motion.div 
+            initial={{ opacity: 0, rotate: 2 }}
+            whileInView={{ opacity: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 1 }}
+            className="relative aspect-[4/3] rounded-sm overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] group"
+          >
             <Image 
               src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=1200" 
               alt="Gift Cards from La Trattoria"
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-[3s] group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-primary/20 flex flex-col items-center justify-center p-8 text-center">
-                <div className="border-2 border-white/50 p-8 backdrop-blur-sm bg-black/20">
-                  <h3 className="font-headline text-3xl text-white uppercase tracking-[0.3em] mb-2">La Trattoria</h3>
-                  <p className="text-white text-xs tracking-widest uppercase font-bold">Regalo Della Casa</p>
-                </div>
+            <div className="absolute inset-0 bg-primary/40 flex flex-col items-center justify-center p-8 text-center backdrop-blur-[2px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="border border-white/30 p-12 backdrop-blur-md bg-black/30 relative"
+                >
+                  <div className="absolute -top-4 -left-4 w-12 h-12 border-t border-l border-white/50"></div>
+                  <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b border-r border-white/50"></div>
+                  <h3 className="font-headline text-4xl text-white uppercase tracking-[0.4em] mb-4">La Trattoria</h3>
+                  <div className="w-16 h-[1px] bg-white/40 mx-auto mb-4"></div>
+                  <p className="text-white text-[10px] tracking-[0.4em] uppercase font-bold">Regalo Della Casa</p>
+                </motion.div>
             </div>
-          </div>
-          <div>
-            <span className="text-tertiary font-bold tracking-[0.2em] uppercase text-sm block mb-4">The Perfect Gift</span>
-            <h2 className="text-4xl lg:text-5xl font-headline text-primary mb-6">Share the Experience</h2>
-            <p className="text-lg text-on-surface-variant leading-relaxed mb-10">
-              Treat your loved ones to an unforgettable evening of authentic Italian cuisine, exceptional wines, and warm hospitality. Available as physical gold-foil cards or instant digital E-Gifts.
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-tertiary font-bold tracking-[0.4em] uppercase text-[10px] block mb-6 px-1 border-l-2 border-tertiary ml-1">The Perfect Gift</span>
+            <h2 className="text-5xl lg:text-7xl font-headline text-primary mb-10 leading-[1.1]">Share the Experience</h2>
+            <p className="text-xl text-on-surface-variant leading-relaxed mb-12 font-body italic opacity-80">
+              Treat your loved ones to an unforgettable evening of authentic Italian cuisine, exceptional wines, and warm hospitality. 
             </p>
-            <div className="flex gap-6">
+            <p className="text-sm text-on-surface-variant leading-relaxed mb-12 font-body max-w-lg">
+              Available as classic physical cards with gold-leaf embossing or instant digital vouchers for last-minute celebrations.
+            </p>
+            <div className="flex gap-10">
               <Link 
                 href="/gift-cards" 
-                className="bg-primary text-on-primary px-8 py-4 font-bold uppercase tracking-widest text-xs hover:bg-tertiary-fixed transition-all shadow-md group flex items-center gap-2"
+                className="bg-primary text-on-primary px-12 py-5 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-tertiary transition-all shadow-2xl group flex items-center gap-4 active:scale-95"
               >
-                Purchase Gift Card <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                Purchase Gift Card 
+                <span className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">arrow_forward</span>
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </main>

@@ -14,22 +14,41 @@ export default function AdminReservationsPage() {
   }, []);
 
   const fetchReservations = async () => {
-    const { data } = await supabase
+    setLoading(true);
+    const { data, error } = await supabase
       .from("reservations")
       .select("*")
-      .order("reservation_date", { ascending: true })
-      .order("reservation_time", { ascending: true });
+      .order("date", { ascending: true })
+      .order("time", { ascending: true });
+    
+    if (error) {
+      console.error("Error fetching reservations:", error);
+    }
     setReservations(data || []);
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this reservation?")) return;
-    await supabase.from("reservations").delete().eq("id", id);
-    fetchReservations();
+    try {
+      const { error } = await supabase.from("reservations").delete().eq("id", id);
+      if (error) {
+        console.error("Supabase deletion error:", error);
+        alert(`Failed to delete: ${error.message}`);
+      } else {
+        await fetchReservations();
+      }
+    } catch (err: any) {
+      console.error("Unexpected deletion error:", err);
+      alert("An unexpected error occurred while deleting.");
+    }
   };
 
-  if (loading) return null;
+  if (loading) return (
+    <div className="flex items-center justify-center p-24">
+      <div className="animate-pulse text-tertiary font-label tracking-widest uppercase text-xs">Loading Reservations...</div>
+    </div>
+  );
 
   return (
     <div className="space-y-12">
@@ -65,6 +84,7 @@ export default function AdminReservationsPage() {
                 <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary">Guest</th>
                 <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary">Date & Time</th>
                 <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary text-center">Party</th>
+                <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary">Applied Offer</th>
                 <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary">Special Requests</th>
                 <th className="p-6 font-label text-[10px] uppercase tracking-widest text-tertiary text-right">Actions</th>
               </tr>
@@ -72,7 +92,7 @@ export default function AdminReservationsPage() {
             <tbody className="divide-y divide-outline-variant/10">
               {reservations.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-12 text-center text-on-surface-variant font-body text-sm italic">
+                  <td colSpan={6} className="p-12 text-center text-on-surface-variant font-body text-sm italic">
                     No reservations found.
                   </td>
                 </tr>
@@ -80,18 +100,30 @@ export default function AdminReservationsPage() {
                 reservations.map((res) => (
                   <tr key={res.id} className="hover:bg-surface-container-lowest transition-colors">
                     <td className="p-6">
-                      <p className="font-headline text-lg text-on-surface">{res.customer_name}</p>
+                      <p className="font-headline text-lg text-on-surface">{res.guest_name}</p>
                       <p className="text-on-surface-variant text-xs">{res.email}</p>
                       <p className="text-on-surface-variant text-xs">{res.phone}</p>
                     </td>
                     <td className="p-6">
-                      <p className="font-body text-sm font-bold text-primary">{res.reservation_date}</p>
-                      <p className="font-body text-xs text-on-surface-variant">{res.reservation_time}</p>
+                      <p className="font-body text-sm font-bold text-primary">{res.date}</p>
+                      <p className="font-body text-xs text-on-surface-variant">{res.time}</p>
                     </td>
                     <td className="p-6 text-center">
                       <span className="bg-surface-container px-3 py-1 rounded-sm font-headline text-lg border border-outline-variant/5">
-                        {res.guests}
+                        {res.party_size}
                       </span>
+                    </td>
+                    <td className="p-6">
+                      {res.applied_promo ? (
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-tertiary text-sm">card_giftcard</span>
+                          <span className="bg-tertiary/10 text-tertiary text-[10px] px-2 py-1 rounded-sm font-bold uppercase border border-tertiary/20">
+                            {res.applied_promo}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-outline-variant text-[10px] uppercase px-2">—</span>
+                      )}
                     </td>
                     <td className="p-6 max-w-xs">
                       <p className="text-xs text-on-surface-variant line-clamp-3 italic">
@@ -112,8 +144,8 @@ export default function AdminReservationsPage() {
                       </button>
                     </td>
                   </tr>
-                )
-              ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>

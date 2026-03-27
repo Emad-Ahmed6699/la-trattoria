@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Star, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState<any[]>([]);
@@ -40,23 +41,29 @@ export default function TestimonialsSection() {
         </div>
         
         <div className="relative min-h-[300px] flex items-center justify-center">
-          {testimonials.map((t, idx) => (
-            <div 
-              key={t.id}
-              className={`absolute inset-0 transition-all duration-1000 transform ${idx === activeIndex ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95 pointer-events-none'}`}
-            >
-              <div className="flex justify-center gap-1 mb-8 text-tertiary">
-                {[...Array(t.rating)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
-              </div>
-              <p className="font-headline text-3xl md:text-5xl text-on-surface leading-tight mb-12 italic">
-                "{t.content}"
-              </p>
-              <div>
-                <h4 className="font-headline text-2xl text-primary">{t.author_name}</h4>
-                <p className="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant/60">{t.author_role}</p>
-              </div>
-            </div>
-          ))}
+          <AnimatePresence mode="wait">
+            {testimonials.length > 0 && (
+              <motion.div 
+                key={activeIndex}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.8 }}
+                className="absolute inset-0"
+              >
+                <div className="flex justify-center gap-1 mb-8 text-tertiary">
+                  {[...Array(testimonials[activeIndex].rating)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+                </div>
+                <p className="font-headline text-3xl md:text-5xl text-on-surface leading-tight mb-12 italic">
+                  "{testimonials[activeIndex].content}"
+                </p>
+                <div>
+                  <h4 className="font-headline text-2xl text-primary">{testimonials[activeIndex].author_name}</h4>
+                  <p className="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant/60">{testimonials[activeIndex].author_role}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Dots */}

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Newsletter from "@/components/Newsletter";
+import { motion } from "framer-motion";
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -53,48 +55,29 @@ export default function ContactPage() {
     setLoading(false);
   };
 
-  const [nlEmail, setNlEmail] = useState("");
-  const [nlLoading, setNlLoading] = useState(false);
-  const [nlMessage, setNlMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setNlLoading(true);
-    setNlMessage(null);
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: nlEmail }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setNlMessage({ text: result.message || "Thank you for subscribing!", type: "success" });
-        setNlEmail("");
-      } else {
-        const error = await response.json();
-        setNlMessage({ text: error.error || "Something went wrong.", type: "error" });
-      }
-    } catch (err) {
-      console.error("Newsletter error:", err);
-      setNlMessage({ text: "Something went wrong.", type: "error" });
-    }
-    setNlLoading(false);
-  };
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-16 lg:py-24 pt-32">
       {/* Hero Section */}
-      <header className="mb-20">
+      <motion.header 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="mb-20"
+      >
         <h1 className="font-headline text-5xl lg:text-7xl font-light mb-6 tracking-tight text-on-surface">Get in touch</h1>
         <p className="max-w-2xl text-lg text-on-surface-variant font-light leading-relaxed font-body">Whether you have a question about our menu, wish to book a private event, or simply want to share your experience, we would love to hear from you.</p>
-      </header>
+      </motion.header>
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
         {/* Left Column: Info & Map */}
-        <div className="lg:col-span-5 space-y-16">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="lg:col-span-5 space-y-16"
+        >
           {/* Contact Details */}
           <div className="space-y-12">
             <section>
@@ -173,10 +156,15 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column: Contact Form */}
-        <div className="lg:col-span-7">
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="lg:col-span-7"
+        >
           <div className="bg-surface-container-low p-8 lg:p-16 rounded-md">
             <h3 className="font-headline text-3xl mb-12 text-on-surface">Inquiry Form</h3>
             <form onSubmit={handleSubmit} className="space-y-10">
@@ -257,37 +245,10 @@ export default function ContactPage() {
             />
             <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* CTASection */}
-      <div className="bg-surface-container py-20 px-6 mt-24 -mx-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-headline text-4xl mb-4 text-on-surface">Join Our Newsletter</h2>
-          <p className="text-on-surface-variant mb-10 font-body">Stay updated with our latest events and seasonal menus.</p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-            <input 
-              className="flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-sm px-6 py-4 text-sm focus:ring-1 focus:ring-tertiary focus:border-tertiary outline-none text-on-surface font-body" 
-              placeholder="Your email address" 
-              type="email" 
-              required
-              value={nlEmail}
-              onChange={(e) => setNlEmail(e.target.value)}
-            />
-            <button 
-              disabled={nlLoading}
-              className="bg-primary text-on-primary px-8 py-4 rounded-sm font-bold text-sm tracking-widest uppercase hover:bg-primary-container transition-all font-label disabled:opacity-50"
-            >
-              {nlLoading ? "..." : "Subscribe"}
-            </button>
-          </form>
-          {nlMessage && (
-            <p className={`mt-4 text-sm font-body ${nlMessage.type === "success" ? "text-primary" : "text-error"}`}>
-              {nlMessage.text}
-            </p>
-          )}
-        </div>
-      </div>
+      <Newsletter />
     </main>
   );
 }
