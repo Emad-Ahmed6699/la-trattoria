@@ -316,36 +316,38 @@ export default function ReservationsPage() {
         <div className="bg-surface-container-high p-12 flex flex-col justify-center items-start gap-8">
           <h3 className="text-2xl font-headline text-on-surface">Contact & Location</h3>
           <div className="space-y-6">
-            <div className="flex items-center gap-4 group cursor-pointer">
+            <Link href="https://instagram.com/latrattoria" target="_blank" className="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
                 <span className="material-symbols-outlined">share</span>
               </div>
               <span className="text-sm font-medium tracking-wide font-label text-on-surface">Follow Us</span>
-            </div>
-            <div className="flex items-center gap-4 group cursor-pointer">
+            </Link>
+            <Link href="https://maps.google.com/?q=Via+della+Conciliazione+124,+Roma" target="_blank" className="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
                 <span className="material-symbols-outlined">public</span>
               </div>
               <span className="text-sm font-medium tracking-wide font-label text-on-surface">Visit</span>
-            </div>
-            <div className="flex items-center gap-4 group cursor-pointer">
+            </Link>
+            <a href="mailto:ciao@latrattoria.it" className="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
                 <span className="material-symbols-outlined">mail</span>
               </div>
               <span className="text-sm font-medium tracking-wide font-label text-on-surface">Email</span>
-            </div>
+            </a>
           </div>
         </div>
-        <div className="relative overflow-hidden grayscale contrast-[0.8] opacity-80">
-          <img 
-            alt="Map location" 
-            className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFEnOSpE8t3yXYBNfWQD1OGAuubeX50NehzlZBrgOSKTNGOMyKhx75L08rF85UFyVyfZfvshqKxVg66KAfxxPb4A-VqU_daTnGdtmDiMlKcAC_2vKMwlWLY4C3ThNPxhrPCr_OdvzxKjrJj2cZ9dkHg2TO9WzXYbL8pYTG00WM368wo-IZ6Gxj5LRKhELpb_q5_l-kNd8zYCfMWi35ACPSD47fIQBK-M5z_XaeuVHI0e40bC1NvyseNkA6_qoqkYNZadzeQwcN9i4" 
-          />
-          <div className="absolute inset-0 bg-primary/10"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <span className="material-symbols-outlined text-primary text-5xl material-fill">location_on</span>
-          </div>
+        <div className="relative overflow-hidden opacity-90 hover:opacity-100 transition-opacity">
+          <iframe 
+            src="https://maps.google.com/maps?q=Via%20della%20Conciliazione%20124,%20Roma&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            allowFullScreen={true} 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="La Trattoria Location Map"
+            className="w-full h-full"
+          ></iframe>
         </div>
       </section>
     </main>

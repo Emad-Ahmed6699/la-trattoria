@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Newsletter from "@/components/Newsletter";
@@ -13,7 +14,7 @@ export default function EventsPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useLocalStorage("eventFormData", {
     name: "",
     email: "",
     eventDate: "",
